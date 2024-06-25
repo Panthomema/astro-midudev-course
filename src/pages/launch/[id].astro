@@ -1,0 +1,33 @@
+---
+import { getLatestLaunches, getLaunchById } from "../../services/spacex";
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = false //server
+
+//cookies
+if (Astro.cookies.get('user')) {
+  
+} else {
+  Astro.redirect('/')
+}
+
+const { id } = Astro.params;
+
+let launch
+if (id) launch = await getLaunchById({ id });
+
+---
+
+<Layout title={`Launch #${launch?.flight_number}`}>
+  <article class="flex gap-y-4 flex-col">
+    <img 
+      src={launch?.links?.patch.small} 
+      alt={launch?.name} 
+      class="w-52 h-auto"
+    />
+    <h2 class="text-4xl text-white font-bold">
+      Launch #{launch?.flight_number}
+    </h2>
+    <p class="text-lg">{launch?.details}</p>
+  </article>
+</Layout>
